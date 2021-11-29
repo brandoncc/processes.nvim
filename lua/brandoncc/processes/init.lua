@@ -64,24 +64,39 @@ end
 
 -- Kills a process tree, including the parent process itself. Child pids
 -- are killed before their parent pid.
-local function kill_tree(parent_pid, timeout_in_seconds)
-  local pids = tree(parent_pid)
-
-  if not timeout_in_seconds then
-    timeout_in_seconds = 5
+local function kill_tree(parent_pid, opts)
+  if not opts then
+    opts = {}
   end
+
+  if not opts.timeout then
+    opts.timeout = 5
+  end
+
+  if not opts.signals then
+    opts.signals = { 'TERM', 'KILL' }
+  end
+
+  local pids = tree(parent_pid)
 
   for i = #pids, 1, -1 do
     local pid = pids[i]
 
-    print("Killing pid: " .. pid)
+    for _, signal in pairs(opts.signals) do
+      if opts.log_signals then
+        print(vim.fn.printf("Killing %s with signal %s", pid, signal))
+      end
 
-    vim.fn.system("kill -TERM " .. pid)
-    local dead = wait_until_dead_or_timeout(pid, timeout_in_seconds)
+      vim.fn.system("kill -" .. signal .. " " .. pid)
+      local dead = wait_until_dead_or_timeout(pid, opts.timeout)
 
-    if dead == nil then
-      print("Timed out waiting for pid: " .. pid .. ". Killing it forcefully.")
-      vim.fn.system("kill -KILL " .. pid)
+      if dead then
+        break
+      end
+    end
+
+    if opts.log_signals then
+      print('Done sending signals')
     end
   end
 end

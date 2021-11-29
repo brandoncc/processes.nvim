@@ -24,15 +24,29 @@ lua require("brandoncc.processes").kill_tree(<pid>, [wait_time_in_seconds])
 
 ### kill_tree
 
-`kill_tree` accepts a process id (pid), and kills its process tree. The tree is
-walked to the bottom and then each level of children is killed before its
-parent. The last pid to be killed is the one that is passed in.
+#### Usage
 
-A second argument is optional, which is a number representing how many seconds
-you are willing to wait for each process to be killed. Processes are initially
-sent a `SIGTERM` signal. If the timeout threshold is reached, the process is
-sent a `SIGKILL`, which should kill it immediately. The default timeout is five
-seconds.
+The first argument is a pid that you would like to kill, along with any
+children/grandchildren/etc.
+
+The second argument is the options hash which can have the following structure:
+
+- timeout: number
+- signals: a list of kill signals to send, after the process exits, no more
+           signals will be sent to that process
+- log_signals: a boolean stating whether you would like to see messages echoed
+                each time a signal is sent to a process.
+
+
+The options table can be omitted if you would like to use the defaults.
+
+```lua
+require("processes").killtree(pid, {
+  timeout = 5,                  -- default value
+  signals = { 'TERM', 'KILL' }, -- default value
+  log_signals: false,           -- default value
+})
+```
 
 Processes are killed one a time, not in parallel.
 
