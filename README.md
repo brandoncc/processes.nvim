@@ -52,9 +52,5 @@ Processes are killed one a time, not in parallel.
 
 ## Contributing
 
-I have some ideas how the `kill_tree` function could be improved (allowing the
-signals to be specified, in particular). I'm sure I will also eventually add
-more functions, when the need arises.
-
 If you have ideas how this package can be improved and extended, please open an
 issue so we can discuss them. Ideas are welcome!
