@@ -6,6 +6,14 @@ This package currently has one function, `kill_tree`.
 I chose to namespace it under `brandoncc` because `processes` seems like a name
 that might collide with other packages or even something native eventually.
 
+## Installation
+
+Install using your favorite plugin manager. For example in vim-plug:
+
+```vim
+Plug 'brandoncc/processes.nvim'
+```
+
 ## Usage
 
 ```vim
