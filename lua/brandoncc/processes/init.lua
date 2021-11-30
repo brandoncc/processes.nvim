@@ -98,7 +98,7 @@ local function kill_tree(parent_pid, opts)
 
   if opts.log_signals then
     if #pids > 0 then
-      print('Done sending signals')
+      print('Done sending signals for ' .. parent_pid)
     else
       print("No pids to kill")
     end
